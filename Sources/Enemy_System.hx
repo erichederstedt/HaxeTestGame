@@ -9,8 +9,7 @@ import kha.math.Vector2i;
 
 enum Enemy_State {
     Idle;
-    Walk;
-    Run;
+    Seek;
     Hit;
     Death;
     Attack1;
@@ -29,6 +28,8 @@ class Enemy
     public var direction: Vector2;
     public var health: Float;
     public var max_health: Float;
+    public var is_attacking: Bool;
+    public var has_attacked: Bool;
 
     public function new() {
         position = new Vector2();
@@ -38,7 +39,9 @@ class Enemy
         current_frame = 0;
         direction = new Vector2();
         max_health = 100.0; 
-        health = max_health; 
+        health = max_health;
+        is_attacking = false;
+        has_attacked = false;
     }
 }
 
@@ -48,7 +51,6 @@ class Enemy_System
     static final sprite_dimensions = [ 
         new Vector2i(4, 4),
         new Vector2i(5, 4),
-        new Vector2i(6, 4),
         new Vector2i(5, 4),
         new Vector2i(6, 4),
         new Vector2i(6, 4),
@@ -58,7 +60,6 @@ class Enemy_System
     static final sprite_names = [ 
         "Orc_Idle_Body_",
         "Orc_Walk_Body_",
-        "Orc_Run_Body_",
         "Orc_Hit_Body_",
         "Orc_Death_Body_",
         "Orc_Attack_01_Body_",
@@ -74,6 +75,11 @@ class Enemy_System
         enemy.current_frame = 0;
         enemy.time = 0;
         trace("enemy_switch_state: " + state);
+
+        enemy.is_attacking = false;
+        enemy.has_attacked = false;
+        if (enemy.state == Attack1 || enemy.state == Attack2 || enemy.state == Attack3)
+            enemy.is_attacking = true;
     }
 
     public function collide_with_enemies(pos1: FastVector2, rad1: Float): Array<Enemy> {
@@ -86,6 +92,53 @@ class Enemy_System
         return hit_enemies;
     }
 
+    function should_seek(enemy: Enemy) {
+        var player_pos = Game.get_player_pos();
+
+        trace("player.x: " + player_pos.x + ", player.y: " + player_pos.y);
+        trace("enemy.x: " + enemy.position.x + ", enemy.y: " + enemy.position.y);
+
+        if (Game.collides(player_pos, 25.0,
+            new FastVector2(enemy.position.x, enemy.position.y), 150.0) && !player_system.is_player_dead())
+        {
+            trace("seek");
+            enemy_switch_state(enemy, Seek);
+        }
+    }
+    function should_stop_seek(enemy: Enemy) {
+        var player_pos = Game.get_player_pos();
+
+        if (!Game.collides(player_pos, 25.0,
+            new FastVector2(enemy.position.x, enemy.position.y), 150.0) || player_system.is_player_dead())
+        {
+            trace("stop seek");
+            enemy_switch_state(enemy, Idle);
+        }
+    }
+    function should_attack(enemy: Enemy) {
+        var player_pos = Game.get_player_pos();
+
+        if (Game.collides(player_pos, 25.0,
+            new FastVector2(enemy.position.x, enemy.position.y), 50.0) && !player_system.is_player_dead())
+        {
+            trace("attack");
+            enemy_switch_state(enemy, Attack1);
+        }
+    }
+    function should_stop_attack(enemy: Enemy) {
+        var player_pos = Game.get_player_pos();
+
+        if (!Game.collides(player_pos, 25.0,
+            new FastVector2(enemy.position.x, enemy.position.y), 50.0) ||  player_system.is_player_dead())
+        {
+            trace("stop attack");
+            enemy_switch_state(enemy, Seek);
+        }
+    }
+    function enemy_move(enemy: Enemy, move_distance: Float) {
+        enemy.position.x += enemy.direction.x * move_distance;
+        enemy.position.y += enemy.direction.y * move_distance;
+    }
     public function enemy_hit(enemy: Enemy, damage: Float) {
         enemy.health -= damage;
 
@@ -102,59 +155,21 @@ class Enemy_System
             enemy.health = 0.0;
         }
     }
-
-    function should_seek(enemy: Enemy) {
-        var player_pos = Game.get_player_pos();
-
-        trace("player.x: " + player_pos.x + ", player.y: " + player_pos.y);
-        trace("enemy.x: " + enemy.position.x + ", enemy.y: " + enemy.position.y);
-
-        if (Game.collides(player_pos, 25.0,
-            new FastVector2(enemy.position.x, enemy.position.y), 150.0))
-        {
-            trace("seek");
-            enemy_switch_state(enemy, Enemy_State.Walk);
-        }
-    }
-    function should_stop_seek(enemy: Enemy) {
-        var player_pos = Game.get_player_pos();
-
-        if (!Game.collides(player_pos, 25.0,
-            new FastVector2(enemy.position.x, enemy.position.y), 150.0))
-        {
-            trace("stop seek");
-            enemy_switch_state(enemy, Enemy_State.Idle);
-        }
-    }
-    function should_attack(enemy: Enemy) {
+    function enemy_attack(enemy: Enemy) {
+        enemy.has_attacked = true;
         var player_pos = Game.get_player_pos();
 
         if (Game.collides(player_pos, 25.0,
             new FastVector2(enemy.position.x, enemy.position.y), 50.0))
         {
-            trace("attack");
-            enemy_switch_state(enemy, Enemy_State.Attack1);
+            player_system.player_hit(15.0);
         }
-    }
-    function should_stop_attack(enemy: Enemy) {
-        var player_pos = Game.get_player_pos();
-
-        if (!Game.collides(player_pos, 25.0,
-            new FastVector2(enemy.position.x, enemy.position.y), 50.0))
-        {
-            trace("stop attack");
-            enemy_switch_state(enemy, enemy.old_state);
-        }
-    }
-    function enemy_move(enemy: Enemy, move_distance: Float) {
-        enemy.position.x += enemy.direction.x * move_distance;
-        enemy.position.y += enemy.direction.y * move_distance;
     }
 
     function update_idle(enemy: Enemy, dt: Float) {
         should_seek(enemy);
     }
-    function update_walk(enemy: Enemy, dt: Float) {
+    function update_seek(enemy: Enemy, dt: Float) {
         var player_pos = new Vector2(Game.get_player_pos().x, Game.get_player_pos().y);
         
         enemy.direction = player_pos.sub(enemy.position).normalized();
@@ -163,14 +178,15 @@ class Enemy_System
         should_attack(enemy);
         should_stop_seek(enemy);
     }
-    function update_run(enemy: Enemy, dt: Float) {
-    }
     function update_hit(enemy: Enemy, dt: Float) {
     }
     function update_death(enemy: Enemy, dt: Float) {
     }
     function update_attack(enemy: Enemy, dt: Float) {
         var player_pos = new Vector2(Game.get_player_pos().x, Game.get_player_pos().y);
+
+        if (enemy.is_attacking && !enemy.has_attacked)
+                enemy_attack(enemy);
 
         enemy.direction = player_pos.sub(enemy.position).normalized();
         should_stop_attack(enemy);
@@ -179,9 +195,8 @@ class Enemy_System
     public function update(dt: Float) {
         final frame_time = 0.03333;
 
-        for (i in 0 ... enemies.length)
+        for (enemy in enemies)
         {
-            var enemy: Enemy = enemies[i];
             enemy.time += dt;
             while (enemy.time >= frame_time)
             {
@@ -192,10 +207,8 @@ class Enemy_System
                 {
                     case Idle:
                         update_idle(enemy, dt);
-                    case Walk:
-                        update_walk(enemy, dt);
-                    case Run:
-                        update_run(enemy, dt);
+                    case Seek:
+                        update_seek(enemy, dt);
                     case Hit:
                         update_hit(enemy, dt);
                     case Death:
@@ -218,6 +231,7 @@ class Enemy_System
                             enemy.current_frame--;
                         default:
                             enemy.current_frame = 0;
+                            enemy.has_attacked = false;
                     }
                 }
             }

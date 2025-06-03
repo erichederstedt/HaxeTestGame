@@ -1,5 +1,6 @@
 package;
 
+import kha.Color;
 import Renderer.Draw_Call;
 import kha.ScreenCanvas;
 import kha.Image;
@@ -72,6 +73,7 @@ class Player_System
     ];
 
     var player: Player = new Player();
+    final move_speed = 75.0;
 
     function player_switch_state(state: Player_State) {
         player.old_state = player.state;
@@ -79,13 +81,10 @@ class Player_System
         player.current_frame = 0;
         player.time = 0;
 
+        player.is_attacking = false;
+        player.has_attacked = false;
         if (state == Attack1 || state == Attack2 || state == Attack3)
             player.is_attacking = true;
-        else 
-            player.is_attacking = false;
-
-
-        player.has_attacked = false;
     }
 
     function player_should_attack() {
@@ -100,6 +99,22 @@ class Player_System
         player.position.x += player.direction.x * move_distance;
         player.position.y += player.direction.y * move_distance;
     }
+    public function player_hit(damage: Float) {
+        player.health -= damage;
+
+        if (player.health > 0.0 && player.state != Hit)
+        {
+            player_switch_state(Hit);
+        }
+        else if (player.health <= 0.0 && player.state != Death)
+        {
+            player_switch_state(Death);
+        }
+        else
+        {
+            player.health = 0.0;
+        }
+    }
     
     var enemy_system: Enemy_System = null;
     function attack() {
@@ -112,31 +127,64 @@ class Player_System
 
         for (enemy in hit_enemies)
         {
-            enemy_system.enemy_hit(enemy, 15.0);
+            enemy_system.enemy_hit(enemy, 50.0);
         }
     }
 
-    public function update(dt: Float) {
-        final move_speed = 75.0;
+    function update_idle(dt: Float) {
+        if (player.direction.length > 0.0)
+            player_switch_state(Walk);
 
+        player_should_attack();
+    }
+    function update_walk(dt: Float) {
+        if (player.direction.length == 0.0)
+            player_switch_state(Idle);
+        if (Input.get_key_held(KeyCode.Shift))
+            player_switch_state(Run);
+
+        player_should_attack();
+        player_move(move_speed * dt);
+    }
+    function update_run(dt: Float) {
+        if (player.direction.length == 0.0)    
+            player_switch_state(Idle);
+        if (!Input.get_key_held(KeyCode.Shift))
+            player_switch_state(Walk);
+
+        player_should_attack();
+        player_move(move_speed * 2.0 * dt);
+    }
+    function update_hit(dt: Float) {
+
+    }
+    function update_death(dt: Float) {
+
+    }
+    function update_attack(dt: Float) {
+
+    }
+
+    public function update(dt: Float) {
         if (player.direction.length > 0.0)
             player.old_direction = player.direction;
 
-        player.direction = new Vector2();
-        if (Input.get_key_held(KeyCode.W)) {
-            player.direction.y -= 1.0;
+        if (player.state != Death)
+        {
+            player.direction = new Vector2();
+            if (Input.get_key_held(KeyCode.W)) {
+                player.direction.y -= 1.0;
+            }
+            if (Input.get_key_held(KeyCode.S)) {
+                player.direction.y += 1.0;
+            }
+            if (Input.get_key_held(KeyCode.A)) { 
+                player.direction.x -= 1.0;
+            }
+            if (Input.get_key_held(KeyCode.D)) { 
+                player.direction.x += 1.0;
+            }
         }
-        if (Input.get_key_held(KeyCode.S)) {
-            player.direction.y += 1.0;
-        }
-        if (Input.get_key_held(KeyCode.A)) { 
-            player.direction.x -= 1.0;
-        }
-        if (Input.get_key_held(KeyCode.D)) { 
-            player.direction.x += 1.0;
-        }
-
-        var old_state = player.state;
 
         player.time += dt;
         final frame_time = 0.03333;
@@ -148,35 +196,21 @@ class Player_System
 
         switch (player.state) {
             case Idle: 
-                if (player.direction.length > 0.0)
-                    player_switch_state(Walk);
-
-                player_should_attack();
-
+                update_idle(dt);
             case Walk:
-                if (player.direction.length == 0.0)
-                    player_switch_state(Idle);
-                if (Input.get_key_held(KeyCode.Shift))
-                    player_switch_state(Run);
-
-                player_should_attack();
-                player_move(move_speed * dt);
-
+                update_walk(dt);
             case Run:
-                if (player.direction.length == 0.0)    
-                    player_switch_state(Idle);
-                if (!Input.get_key_held(KeyCode.Shift))
-                    player_switch_state(Walk);
-
-                player_should_attack();
-                player_move(move_speed * 2.0 * dt);
-
+                update_run(dt);
             case Hit:
+                update_hit(dt);
             case Death:
-
+                update_death(dt);
             case Attack1:
+                update_attack(dt);
             case Attack2:
+                update_attack(dt);
             case Attack3:
+                update_attack(dt);
         }
 
         if (player.is_attacking && !player.has_attacked)
@@ -189,21 +223,18 @@ class Player_System
                     player.current_frame--;
 
                 case Hit:
-                    player_switch_state(player.old_state);
+                    player_switch_state(Idle);
                 case Attack1:
-                    player_switch_state(player.old_state);
+                    player_switch_state(Idle);
                 case Attack2:
-                    player_switch_state(player.old_state);
+                    player_switch_state(Idle);
                 case Attack3:
-                    player_switch_state(player.old_state);
+                    player_switch_state(Idle);
                 
                 default:
                     player.current_frame = 0;
             }
         }
-
-        if (old_state != player.state)
-            trace("player.state: " + player.state);
     }
 
     public function render() {
@@ -264,6 +295,13 @@ class Player_System
         draw_call.is_sub_image = true;
         draw_call.sub_image_position = sub_image_pos;
         draw_call.sub_image_size = sub_image_size;
+
+        var blink: Int = Std.int(player.current_frame / 6);
+        if (blink % 2 == 0 && player.state == Hit)
+        {
+            draw_call.color = Color.Red;
+        }
+
         Renderer.draw_quad(draw_call);
 
         {
@@ -295,5 +333,8 @@ class Player_System
 
     public function get_player_position(): FastVector2 {
         return player.position.fast();
+    }
+    public function is_player_dead(): Bool {
+        return player.state == Death;
     }
 }
