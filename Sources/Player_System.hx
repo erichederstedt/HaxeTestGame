@@ -60,6 +60,16 @@ class Player_System
         new Vector2i(6, 4),
         new Vector2i(6, 4)
     ];
+    static final sprite_names = [ 
+        "Player_Idle_Body_",
+        "Player_Walk_Body_",
+        "Player_Run_Body_",
+        "Player_Hit_Body_",
+        "Player_Death_Body_",
+        "Player_Attack1_Body_",
+        "Player_Attack2_Body_",
+        "Player_Attack3_Body_"
+    ];
 
     var player: Player = new Player();
 
@@ -234,25 +244,7 @@ class Player_System
             dir_name = "315";
         }
 
-        switch (player.state)
-        {
-            case Idle: 
-                texture = Renderer.get_texture("Player_Idle_Body_"+dir_name);
-            case Walk:
-                texture = Renderer.get_texture("Player_Walk_Body_"+dir_name);
-            case Run:
-                texture = Renderer.get_texture("Player_Run_Body_"+dir_name);
-            case Hit:
-                texture = Renderer.get_texture("Player_Hit_Body_"+dir_name);
-            case Death:
-                texture = Renderer.get_texture("Player_Death_Body_"+dir_name);
-            case Attack1:
-                texture = Renderer.get_texture("Player_Attack1_Body_"+dir_name);
-            case Attack2:
-                texture = Renderer.get_texture("Player_Attack2_Body_"+dir_name);
-            case Attack3:
-                texture = Renderer.get_texture("Player_Attack3_Body_"+dir_name);
-        }
+        texture = Renderer.get_texture(sprite_names[player.state.getIndex()]+dir_name);
 
         final spritesheet_dimension: Vector2i = sprite_dimensions[player.state.getIndex()];
 

@@ -1,10 +1,8 @@
 package;
-import kha.graphics1.Graphics4;
+
 import kha.Assets;
 import kha.Image;
-import kha.FastFloat;
 import kha.math.FastVector2;
-import kha.math.FastMatrix3;
 import kha.Framebuffer;
 import kha.Color;
 
@@ -69,7 +67,6 @@ class Renderer
         return Assets.images.get(name);
     }
 
-    #if 1
     static function render_circle(g2: kha.graphics2.Graphics, position: FastVector2, radius: Float, segments: Int = 64) {
         var angleStep = Math.PI * 2 / segments;
         var prevX = position.x + Math.cos(0) * radius;
@@ -84,7 +81,6 @@ class Renderer
             prevY = y;
         }
     }
-    #end
 
     public static function render_frame(frame: Framebuffer): Void {
 		final g2: kha.graphics2.Graphics = frame.g2;
@@ -122,8 +118,6 @@ class Renderer
                     g2.popTransformation();
                 }
             }
-
-
             
 		    g2.popTransformation();
 		    g2.popTransformation();

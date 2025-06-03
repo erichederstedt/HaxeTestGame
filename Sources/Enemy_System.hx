@@ -2,9 +2,6 @@ package;
 
 import Renderer.Draw_Call;
 import kha.Color;
-import kha.ScreenCanvas;
-import differ.Collision;
-import differ.shapes.Circle;
 import kha.math.FastVector2;
 import kha.Image;
 import kha.math.Vector2;
@@ -57,6 +54,16 @@ class Enemy_System
         new Vector2i(6, 4),
         new Vector2i(6, 5),
         new Vector2i(6, 4)
+    ];
+    static final sprite_names = [ 
+        "Orc_Idle_Body_",
+        "Orc_Walk_Body_",
+        "Orc_Run_Body_",
+        "Orc_Hit_Body_",
+        "Orc_Death_Body_",
+        "Orc_Attack_01_Body_",
+        "Orc_Attack_02_Body_",
+        "Orc_Attack_03_Body_"
     ];
 
     var enemies: Array<Enemy> = new Array<Enemy>();
@@ -260,25 +267,7 @@ class Enemy_System
                 dir_name = "315";
             }
 
-            switch (enemy.state)
-            {
-                case Idle: 
-                    texture = Renderer.get_texture("Orc_Idle_Body_"+dir_name);
-                case Walk:
-                    texture = Renderer.get_texture("Orc_Walk_Body_"+dir_name);
-                case Run:
-                    texture = Renderer.get_texture("Orc_Run_Body_"+dir_name);
-                case Hit:
-                    texture = Renderer.get_texture("Orc_Hit_Body_"+dir_name);
-                case Death:
-                    texture = Renderer.get_texture("Orc_Death_Body_"+dir_name);
-                case Attack1:
-                    texture = Renderer.get_texture("Orc_Attack_01_Body_"+dir_name);
-                case Attack2:
-                    texture = Renderer.get_texture("Orc_Attack_02_Body_"+dir_name);
-                case Attack3:
-                    texture = Renderer.get_texture("Orc_Attack_03_Body_"+dir_name);
-            }
+            texture = Renderer.get_texture(sprite_names[enemy.state.getIndex()]+dir_name);
 
             final spritesheet_dimension: Vector2i = sprite_dimensions[enemy.state.getIndex()];
 
