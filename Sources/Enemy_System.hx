@@ -1,10 +1,10 @@
 package;
 
+import Renderer.Draw_Call;
 import kha.Color;
 import kha.ScreenCanvas;
 import differ.Collision;
 import differ.shapes.Circle;
-import Renderer.make_draw_call;
 import kha.math.FastVector2;
 import kha.Image;
 import kha.math.Vector2;
@@ -290,7 +290,7 @@ class Enemy_System
             sub_image_pos.x = Std.int((enemy.current_frame % spritesheet_dimension.x)) * (sub_image_size.x);
             sub_image_pos.y = Std.int((enemy.current_frame / spritesheet_dimension.x)) * (sub_image_size.y);
 
-            var draw_call = make_draw_call();
+            var draw_call = new Draw_Call();
             draw_call.texture = texture;
             draw_call.position.x = enemy.position.x - camera_pos.x;
             draw_call.position.y = enemy.position.y - camera_pos.y / 2;

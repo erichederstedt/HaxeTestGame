@@ -3,7 +3,6 @@ package;
 import kha.ScreenCanvas;
 import differ.Collision;
 import differ.shapes.Circle;
-import Renderer.make_draw_call;
 import Renderer.Draw_Call;
 import kha.Color;
 import kha.math.FastVector2;
@@ -24,7 +23,7 @@ class Game
         Renderer.flip_buffer();
 
         angle += dt;
-        var draw_call = make_draw_call();
+        var draw_call = new Draw_Call();
         draw_call.color = Color.Red;
         draw_call.position = new FastVector2(0, 0);
         draw_call.size = new FastVector2(64, 64);
@@ -44,7 +43,7 @@ class Game
                 draw_pos.x += 300; // Offset
                 draw_pos.y += 300;
 
-                var draw_call = make_draw_call();
+                var draw_call = new Draw_Call();
                 draw_call.texture = Renderer.get_texture("grass_1");
                 draw_call.color = Color.White;
                 draw_call.position = draw_pos;

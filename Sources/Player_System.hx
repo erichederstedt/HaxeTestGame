@@ -1,7 +1,7 @@
 package;
 
+import Renderer.Draw_Call;
 import kha.ScreenCanvas;
-import Renderer.make_draw_call;
 import kha.Image;
 import kha.input.KeyCode;
 import kha.math.FastVector2;
@@ -19,18 +19,33 @@ enum Player_State {
     Attack3;
 }
 
-typedef Player = {
-    var position: Vector2;
-    var state: Player_State;
-    var old_state: Player_State;
-    var time: Float;
-    var current_frame: Int;
-    var direction: Vector2;
-    var old_direction: Vector2;
-    var is_attacking: Bool;
-    var has_attacked: Bool;
-    var health: Float;
-    var max_health: Float;
+@:struct
+class Player {
+    public var position: Vector2;
+    public var state: Player_State;
+    public var old_state: Player_State;
+    public var time: Float;
+    public var current_frame: Int;
+    public var direction: Vector2;
+    public var old_direction: Vector2;
+    public var is_attacking: Bool;
+    public var has_attacked: Bool;
+    public var health: Float;
+    public var max_health: Float;
+
+    public function new() {
+        position = new Vector2();
+        state = Player_State.Idle;
+        old_state = Player_State.Idle;
+        time = 0.0;
+        current_frame = 0;
+        direction = new Vector2();
+        old_direction = new Vector2();
+        is_attacking = false;
+        has_attacked = false;
+        max_health = 100.0; 
+        health = max_health;
+    }
 }
 
 class Player_System
@@ -46,19 +61,7 @@ class Player_System
         new Vector2i(6, 4)
     ];
 
-    var player: Player = {
-        position: new Vector2(),
-        state: Player_State.Idle,
-        old_state: Player_State.Idle,
-        time: 0.0,
-        current_frame: 0,
-        direction: new Vector2(),
-        old_direction: new Vector2(),
-        is_attacking: false,
-        has_attacked: false,
-        max_health: 100.0, 
-        health: 100.0
-    };
+    var player: Player = new Player();
 
     function player_switch_state(state: Player_State) {
         player.old_state = player.state;
@@ -261,7 +264,7 @@ class Player_System
         sub_image_pos.x = Std.int((player.current_frame % spritesheet_dimension.x)) * (sub_image_size.x);
         sub_image_pos.y = Std.int((player.current_frame / spritesheet_dimension.x)) * (sub_image_size.y);
 
-        var draw_call = make_draw_call();
+        var draw_call = new Draw_Call();
         draw_call.texture = texture;
         draw_call.position.x = ScreenCanvas.the.width / 2.0;
         draw_call.position.y = ScreenCanvas.the.height / 2.0;

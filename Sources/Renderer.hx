@@ -8,51 +8,43 @@ import kha.math.FastMatrix3;
 import kha.Framebuffer;
 import kha.Color;
 
-typedef Draw_Call = 
+@:struct
+class Draw_Call
 {
-    var texture: Image;
-    var color: Color;
-    var position: FastVector2;
-    var size: FastVector2;
-    var post_rotation_scale: FastVector2;
-    var origin: FastVector2; // 0,0 == middle
-    var rotation: Float;
-    var is_sub_image: Bool;
-    var sub_image_position: FastVector2;
-    var sub_image_size: FastVector2;
-    var is_circle: Bool;
-    var radius: Float; // Only used when circle
-}
-function make_draw_call(): Draw_Call {
-    return {
-            texture: null,
-            color: Color.White,
-            position: new FastVector2(0, 0),
-            size: new FastVector2(1.0, 1.0),
-            post_rotation_scale: new FastVector2(1.0, 1.0),
-            origin: new FastVector2(0.5, 0.5),
-            rotation: 0.0,
-            is_sub_image: false,
-            sub_image_position: new FastVector2(0.0, 0.0),
-            sub_image_size: new FastVector2(1.0, 1.0),
-            is_circle: false,
-            radius: 0.0
-        };
-}
-typedef Camera = 
-{
-    var position: FastVector2;
+    public var texture: Image;
+    public var color: Color;
+    public var position: FastVector2;
+    public var size: FastVector2;
+    public var post_rotation_scale: FastVector2;
+    public var origin: FastVector2; // 0,0 == middle
+    public var rotation: Float;
+    public var is_sub_image: Bool;
+    public var sub_image_position: FastVector2;
+    public var sub_image_size: FastVector2;
+    public var is_circle: Bool;
+    public var radius: Float; // Only used when circle
+
+    public function new() {
+        texture = null;
+        color = Color.White;
+        position = new FastVector2(0, 0);
+        size = new FastVector2(1.0, 1.0);
+        post_rotation_scale = new FastVector2(1.0, 1.0);
+        origin = new FastVector2(0.5, 0.5);
+        rotation = 0.0;
+        is_sub_image = false;
+        sub_image_position = new FastVector2(0.0, 0.0);
+        sub_image_size = new FastVector2(1.0, 1.0);
+        is_circle = false;
+        radius = 0.0;
+    }
 }
 class Frame_Buffer
 {
     public var draw_calls: Array<Draw_Call>;
-    public var camera: Camera;
 
     public function new() {
         this.draw_calls = new Array<Draw_Call>();
-        this.camera = {
-            position: new FastVector2(0, 0)
-        };
     }
 }
 
@@ -65,7 +57,7 @@ class Renderer
         frame_buffers[frame_index].draw_calls.push(draw_call);
     }
     public static function draw_circle(position: FastVector2, radius: Float, color: Color = Color.White): Void {
-        var draw_call = make_draw_call();
+        var draw_call = new Draw_Call();
         draw_call.position = position;
         draw_call.is_circle = true;
         draw_call.radius = radius;
