@@ -5,10 +5,14 @@
     },
     "activeFile": "map.tmx",
     "expandedProjectPaths": [
+        "tilesets",
+        "Tilesets",
+        "."
     ],
     "fileStates": {
         "C:/Users/dolf/Downloads/SBS - Isometric Floor Tiles - Small 128x64/Small 128x64/Tsx/Exterior/Floor_Dry_01-128x64.tsx": {
-            "scaleInDock": 1
+            "scaleInDock": 1,
+            "scaleInEditor": 1
         },
         "C:/Users/dolf/Downloads/SBS - Isometric Floor Tiles - Small 128x64/Small 128x64/Tsx/Exterior/Floor_Dry_02-128x64.tsx": {
             "scaleInDock": 1
@@ -49,18 +53,102 @@
         "C:/Users/dolf/Downloads/SBS - Isometric Floor Tiles - Small 128x64/Small 128x64/Tsx/Exterior/Floor_Stones_02-128x64.tsx": {
             "scaleInDock": 1
         },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_01-128x64.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_01_128x64.tsx": {
+            "scaleInDock": 1,
+            "scaleInEditor": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Elements_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Elements_01_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Elements_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Elements_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Flora_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Flora_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Flora_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Grass_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Grass_01_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Grass_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Grass_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Ice_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Ice_01_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Ice_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Ice_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Rocky_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Rocky_01_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Rocky_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Rocky_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Stones_01-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Stones_01_128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Stones_02-128x64.tsx": {
+            "scaleInDock": 1
+        },
+        "Tilesets/Floor/Tsx/Exterior/Floor_Stones_02_128x64.tsx": {
+            "scaleInDock": 1
+        },
         "map.tmx": {
             "scale": 0.33,
             "selectedLayer": 0,
             "viewCenter": {
-                "x": 6327.272727272728,
-                "y": 3081.818181818182
+                "x": 5736.363636363636,
+                "y": 3000
             }
         }
     },
     "last.exportedFilePath": "E:/Projects/HaxeTestGame/Assets/Map",
+    "last.externalTilesetPath": "E:/Projects/HaxeTestGame/Assets/Map/Tilesets/Floor/Tsx/Exterior",
     "map.height": 64,
-    "map.lastUsedExportFilter": "All Files (*)",
+    "map.lastUsedExportFilter": "CSV files (*.csv)",
     "map.lastUsedFormat": "tmx",
     "map.orientation": "2",
     "map.tileHeight": 64,
@@ -71,6 +159,9 @@
     ],
     "project": "test_map.tiled-project",
     "recentFiles": [
-        "map.tmx"
+        "map.tmx",
+        "C:/Users/dolf/Downloads/SBS - Isometric Floor Tiles - Small 128x64/Small 128x64/Tsx/Exterior/Floor_Dry_01-128x64.tsx",
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_01_128x64.tsx",
+        "Tilesets/Floor/Tsx/Exterior/Floor_Dry_01-128x64.tsx"
     ]
 }
