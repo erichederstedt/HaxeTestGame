@@ -74,7 +74,6 @@ class Enemy_System
         enemy.state = state;
         enemy.current_frame = 0;
         enemy.time = 0;
-        trace("enemy_switch_state: " + state);
 
         enemy.is_attacking = false;
         enemy.has_attacked = false;
@@ -95,13 +94,9 @@ class Enemy_System
     function should_seek(enemy: Enemy) {
         var player_pos = Game.get_player_pos();
 
-        trace("player.x: " + player_pos.x + ", player.y: " + player_pos.y);
-        trace("enemy.x: " + enemy.position.x + ", enemy.y: " + enemy.position.y);
-
         if (Game.collides(player_pos, 25.0,
             new FastVector2(enemy.position.x, enemy.position.y), 150.0) && !player_system.is_player_dead())
         {
-            trace("seek");
             enemy_switch_state(enemy, Seek);
         }
     }
@@ -111,7 +106,6 @@ class Enemy_System
         if (!Game.collides(player_pos, 25.0,
             new FastVector2(enemy.position.x, enemy.position.y), 150.0) || player_system.is_player_dead())
         {
-            trace("stop seek");
             enemy_switch_state(enemy, Idle);
         }
     }
@@ -121,7 +115,6 @@ class Enemy_System
         if (Game.collides(player_pos, 25.0,
             new FastVector2(enemy.position.x, enemy.position.y), 50.0) && !player_system.is_player_dead())
         {
-            trace("attack");
             enemy_switch_state(enemy, Attack1);
         }
     }
@@ -131,7 +124,6 @@ class Enemy_System
         if (!Game.collides(player_pos, 25.0,
             new FastVector2(enemy.position.x, enemy.position.y), 50.0) ||  player_system.is_player_dead())
         {
-            trace("stop attack");
             enemy_switch_state(enemy, Seek);
         }
     }
